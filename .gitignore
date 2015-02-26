@@ -84,7 +84,6 @@ crashlytics-build.properties
 
 # Build data
 /build/
-
 # Composer PHAR
 /composer.phar
 
