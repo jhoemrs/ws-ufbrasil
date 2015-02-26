@@ -1,0 +1,5 @@
+estados:
+    resource: "@EstadosBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
