@@ -5,8 +5,9 @@ Projeto baseado em Symfony2 para criação de webservice, usando o banco de dado
 
 Requirements
 -------------
-Possuir uma tabela no MySQL populada com as UF's e o nome do Estado.
 
+  * Possuir uma tabela no MySQL populada com as UF's e o nome do Estado.
+  * Possuir o Composer e o Symfony2 devidamente configurados.
 
 What's inside?
 --------------
