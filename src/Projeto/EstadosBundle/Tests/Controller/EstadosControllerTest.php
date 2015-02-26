@@ -13,11 +13,4 @@ class EstadosControllerTest extends WebTestCase
         $crawler = $client->request('GET', 'listar-estados');
     }
 
-    public function testListaruf()
-    {
-        $client = static::createClient();
-
-        $crawler = $client->request('GET', 'listar-uf');
-    }
-
 }

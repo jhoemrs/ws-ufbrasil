@@ -91,4 +91,14 @@ class Estados
     {
         return $this->acronimo;
     }
+
+    public function toArray(){
+        return array(
+            'id'       => $this->id,
+            'nome'     => $this->nome,
+            'acronimo' => $this->acronimo
+
+        );
+    }
+
 }

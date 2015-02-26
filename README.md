@@ -1,11 +1,11 @@
-WebService para trazer as UF's em JSON
+WebService para trazer os Estados e as UF's (Unidades Federativas) em JSON
 ========================
 
-Projeto baseado em Symfonhy2 para criação de webservice, usando o banco de dados mysql.
+Projeto baseado em Symfony2 para criação de webservice, usando o banco de dados mysql.
 
 Requirements
 -------------
-Possuir uma tabela no MySQL populada com as UF's.
+Possuir uma tabela no MySQL populada com as UF's e o nome do Estado.
 
 
 What's inside?

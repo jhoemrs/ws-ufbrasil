@@ -5,6 +5,7 @@ namespace Projeto\EstadosBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class EstadosController extends Controller
 {
@@ -14,18 +15,21 @@ class EstadosController extends Controller
      */
     public function listarEstadosAction()
     {
-        return array(
-                // ...
-            );    }
+        $estados = $this
+            ->getDoctrine()
+            ->getRepository("EstadosBundle:Estados")
+            ->findAll();
 
-    /**
-     * @Route("listar-uf")
-     * @Template()
-     */
-    public function listarUfAction()
-    {
-        return array(
-                // ...
-            );    }
+        $aEstado = array();
 
+        foreach ($estados as $estado){
+            $aEstado[] = $estado->toArray();
+        }
+
+        $response = new JsonResponse($aEstado,200,array(
+            'Content-Type' => 'application/json'));
+
+        return $response;
+
+    }
 }
