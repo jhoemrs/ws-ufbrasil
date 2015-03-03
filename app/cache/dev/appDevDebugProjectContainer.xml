@@ -16,6 +16,7 @@
       <parameter key="AsseticBundle">Symfony\Bundle\AsseticBundle\AsseticBundle</parameter>
       <parameter key="DoctrineBundle">Doctrine\Bundle\DoctrineBundle\DoctrineBundle</parameter>
       <parameter key="SensioFrameworkExtraBundle">Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle</parameter>
+      <parameter key="NelmioCorsBundle">Nelmio\CorsBundle\NelmioCorsBundle</parameter>
       <parameter key="EstadosBundle">Projeto\EstadosBundle\EstadosBundle</parameter>
       <parameter key="DebugBundle">Symfony\Bundle\DebugBundle\DebugBundle</parameter>
       <parameter key="WebProfilerBundle">Symfony\Bundle\WebProfilerBundle\WebProfilerBundle</parameter>
@@ -578,6 +579,43 @@
     <parameter key="sensio_framework_extra.converter.doctrine.class">Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\DoctrineParamConverter</parameter>
     <parameter key="sensio_framework_extra.converter.datetime.class">Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\DateTimeParamConverter</parameter>
     <parameter key="sensio_framework_extra.view.listener.class">Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener</parameter>
+    <parameter key="nelmio_cors.defaults" type="collection">
+      <parameter key="allow_origin" type="collection"/>
+      <parameter key="allow_credentials">true</parameter>
+      <parameter key="allow_headers" type="collection"/>
+      <parameter key="expose_headers" type="collection"/>
+      <parameter key="allow_methods" type="collection"/>
+      <parameter key="max_age">0</parameter>
+      <parameter key="hosts" type="collection"/>
+      <parameter key="origin_regex">false</parameter>
+    </parameter>
+    <parameter key="nelmio_cors.map" type="collection">
+      <parameter key="^/" type="collection">
+        <parameter key="allow_origin">true</parameter>
+        <parameter key="allow_headers" type="collection">
+          <parameter>origin</parameter>
+          <parameter>content-type</parameter>
+          <parameter>origin</parameter>
+          <parameter>content-type</parameter>
+        </parameter>
+        <parameter key="allow_methods" type="collection">
+          <parameter>POST</parameter>
+          <parameter>PUT</parameter>
+          <parameter>GET</parameter>
+          <parameter>DELETE</parameter>
+          <parameter>OPTIONS</parameter>
+          <parameter>POST</parameter>
+          <parameter>PUT</parameter>
+          <parameter>GET</parameter>
+          <parameter>DELETE</parameter>
+          <parameter>OPTIONS</parameter>
+        </parameter>
+        <parameter key="max_age">3600</parameter>
+      </parameter>
+    </parameter>
+    <parameter key="nelmio_cors.cors_listener.class">Nelmio\CorsBundle\EventListener\CorsListener</parameter>
+    <parameter key="nelmio_cors.options_resolver.class">Nelmio\CorsBundle\Options\Resolver</parameter>
+    <parameter key="nelmio_cors.options_provider.config.class">Nelmio\CorsBundle\Options\ConfigProvider</parameter>
     <parameter key="web_profiler.controller.profiler.class">Symfony\Bundle\WebProfilerBundle\Controller\ProfilerController</parameter>
     <parameter key="web_profiler.controller.router.class">Symfony\Bundle\WebProfilerBundle\Controller\RouterController</parameter>
     <parameter key="web_profiler.controller.exception.class">Symfony\Bundle\WebProfilerBundle\Controller\ExceptionController</parameter>
@@ -1653,6 +1691,14 @@
         </argument>
         <argument>0</argument>
       </call>
+      <call method="addListenerService">
+        <argument>kernel.request</argument>
+        <argument type="collection">
+          <argument>nelmio_cors.cors_listener</argument>
+          <argument>onKernelRequest</argument>
+        </argument>
+        <argument>10000</argument>
+      </call>
       <call method="addSubscriberService">
         <argument>response_listener</argument>
         <argument>Symfony\Component\HttpKernel\EventListener\ResponseListener</argument>
@@ -2612,6 +2658,54 @@
       </argument>
       <argument type="service" id="security.authentication.trust_resolver" on-invalid="null"/>
       <argument type="service" id="security.role_hierarchy" on-invalid="null"/>
+    </service>
+    <service id="nelmio_cors.cors_listener" class="Nelmio\CorsBundle\EventListener\CorsListener">
+      <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="10000"/>
+      <argument type="service" id="debug.event_dispatcher"/>
+      <argument type="service">
+        <service class="Nelmio\CorsBundle\Options\Resolver" public="false">
+          <argument type="collection">
+            <argument type="service" id="nelmio_cors.options_provider.config"/>
+          </argument>
+        </service>
+      </argument>
+    </service>
+    <service id="nelmio_cors.options_provider.config" class="Nelmio\CorsBundle\Options\ConfigProvider">
+      <tag name="nelmio_cors.options_provider" priority="-1"/>
+      <argument type="collection">
+        <argument key="^/" type="collection">
+          <argument key="allow_origin">true</argument>
+          <argument key="allow_headers" type="collection">
+            <argument>origin</argument>
+            <argument>content-type</argument>
+            <argument>origin</argument>
+            <argument>content-type</argument>
+          </argument>
+          <argument key="allow_methods" type="collection">
+            <argument>POST</argument>
+            <argument>PUT</argument>
+            <argument>GET</argument>
+            <argument>DELETE</argument>
+            <argument>OPTIONS</argument>
+            <argument>POST</argument>
+            <argument>PUT</argument>
+            <argument>GET</argument>
+            <argument>DELETE</argument>
+            <argument>OPTIONS</argument>
+          </argument>
+          <argument key="max_age">3600</argument>
+        </argument>
+      </argument>
+      <argument type="collection">
+        <argument key="allow_origin" type="collection"/>
+        <argument key="allow_credentials">true</argument>
+        <argument key="allow_headers" type="collection"/>
+        <argument key="expose_headers" type="collection"/>
+        <argument key="allow_methods" type="collection"/>
+        <argument key="max_age">0</argument>
+        <argument key="hosts" type="collection"/>
+        <argument key="origin_regex">false</argument>
+      </argument>
     </service>
     <service id="data_collector.dump" class="Symfony\Component\HttpKernel\DataCollector\DumpDataCollector">
       <tag name="data_collector" id="dump" template="@Debug/Profiler/dump.html.twig"/>
